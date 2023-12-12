@@ -5,6 +5,7 @@ import os
 from flask import flash
 import uuid
 import json
+import numpy
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -47,17 +48,16 @@ def register():
       
         print(f' --{username} -- {hashed_password}')
 
-
         if(uuid_str,username,email,hashed_password) not in load_users():
             save_user(new_user)
-            # session['username']=username
+            
             return redirect(url_for('login'))
     return render_template('register.html')
 
 
 def save_user(user):
     with open("users.txt","a") as file:
-        file.write(f'{user.id}:{user.username}:{user.email}:{user.password}\n')
+        file.write(f'{user.id};{user.username};{user.email};{user.password}\n')
     
 def load_users():
     with open("users.txt","r") as file:
@@ -122,8 +122,45 @@ def read_movies_from_file():
 @login_required
 def home():   
 
-    movies_data=read_movies_from_file()
-    return render_template('home.html',user=current_user,movies=movies_data)
+    movies=read_movies_from_file()      
+    year =[]    
+     # x=numpy.array(list) and then use numpy.unique(x) 
+    for movie in movies:
+        year_str =movie.get('release_date').strip().split('-')[0]
+        year.append(year_str)
+        year_x = numpy.array(year)
+        y = numpy.unique(year_x)
+
+    selected_year=request.args.get('selected_year',default='all')
+    if selected_year != 'all':
+         filtered_movies = [movie for movie in movies if movie.get('release_date', '').startswith(selected_year)]
+         return render_template('home.html',user=current_user,movies=filtered_movies,years=y,selected_year=selected_year)
+    
+    return render_template('home.html',user=current_user,movies=movies,years=y,selected_year='all')
+
+
+@app.route('/save/<original_title>',methods=['POST'])
+def save(original_title):
+    if request.method=='POST':
+        print(original_title)
+
+        if current_user.is_authenticated:
+
+            user_identifier =current_user.id
+            user_record=f'{user_identifier};{current_user.username};{current_user.email};{current_user.password}'
+
+            components = user_record.split(';')
+            current_movie_title =components[4:]
+
+            if len(current_movie_title)<3:
+               
+                with open("users.txt","a") as file:
+                    file.write(f';{original_title}')
+
+                print("Saved successfully")
+            else:
+                print("User already has three movies saved. Cannot add more.")
+    return redirect('home')
 
 def load_actors_from_file():
    try:

@@ -4,19 +4,12 @@
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>
-<body>   
+<body> 
    
-    {%include 'navbar.html'%}
-  
-
-    <!-- Main content block -->
+    {%include 'navbar.html'%} 
     <div id="main-content">
         {% block content %}{% endblock %}
-    </div>
-
-    <!-- Common footer -->
-    
+    </div>    
     {% include 'footer.html'%}
-  
 </body>
 </html>
