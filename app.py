@@ -55,18 +55,24 @@ def register():
 
 
 def save_user(user):
-    with open("users.txt","a") as file:
+    with open("users.txt","a", errors='ignore') as file:
         file.write(f'{user.id};{user.username};{user.email};{user.password}\n')
     
 def load_users():
-    with open("users.txt","r") as file:
+    with open("users.txt","r", errors='ignore') as file:
         lines =file.readlines()
         return [line.strip().split(';') for line in lines]
     
 def load_user_by_username_password(username,password):
-    with open("users.txt","r") as file:
+    with open("users.txt","r",encoding="utf-8",errors="ignore") as file:
         for user in file:
-            user_id,stored_username,stored_email,stored_hashed_password = user.strip().split(';')
+            # user_id,stored_username,stored_email,stored_hashed_password = user.strip().split(';')
+            components = user.strip().split(";")
+            if len(components) >= 4:
+                user_id = components[0]
+                stored_username = components[1]
+                stored_email = components[2]
+                stored_hashed_password = components[3]
             # id_str=str(user_id)
 
             if stored_username ==username and bcrypt.check_password_hash(stored_hashed_password,password):
@@ -102,7 +108,7 @@ def login():
 
 def read_movies_from_file():
     try:
-        with open("movies.json","r",encoding="utf-8") as file:
+        with open("movies.json","r",encoding="utf-8", errors='ignore') as file:
             file_contents = file.read()
            
             movies=json.loads(file_contents)
@@ -136,33 +142,41 @@ def home():
     return render_template('home.html',user=current_user,movies=movies,years=y,selected_year='all')
 
 
-@app.route('/save/<original_title>',methods=['POST'])
+@app.route('/save/<original_title>', methods=['POST'])
 def save(original_title=None):
-    if request.method=='POST' and current_user.is_authenticated:
-        print(original_title)
-        user_identifier =current_user.id
-        user_record=f'{user_identifier};{current_user.username};{current_user.email};{current_user.password}'
+    if request.method == 'POST' and current_user.is_authenticated:
+        user_identifier = current_user.id
+        user_record = f'{user_identifier};{current_user.username};{current_user.email};{current_user.password}'
 
-        components = user_record.split(';')
-        current_movie_titles = set(components[4:])
-        print(f'current_movie_title:  {current_movie_titles}')
+        with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
+            lines = file.readlines()
+        print(f'All files:: {lines}')
 
-        if len(current_movie_titles)<3 and original_title not in current_movie_titles:
-            
-            with open("users.txt","a",encoding='utf-8') as file:
-                delimiter = ';' 
-                file.write(f'{delimiter}{original_title}')
+        # Find and update the correct user's record
+        for i, line in enumerate(lines):
+            if user_identifier in line:
+                components = line.split(';')
+                print(f'components array: {components}')
+                current_movie_titles = set(components[4:])
+                if len(current_movie_titles) < 3 and original_title not in current_movie_titles:
+                    lines[i] = f'{line.rstrip()};{original_title}\n'
+                    with open("users.txt", "w", encoding='utf-8', errors='ignore') as file:
+                        file.writelines(lines)
 
-            print("Saved successfully")
-            redirect(url_for('home'))
-        else:
-            print("User already has three movies saved. Cannot add more.")
-            return redirect(url_for('home'))
+                    print("Saved successfully")
+                    return redirect(url_for('home'))
+                else:
+                    print("User already has three movies saved. Cannot add more.")
+                    return redirect(url_for('home'))
+
+        print("User not found in the file.")
+        return redirect(url_for('home'))
+
     return redirect(url_for('home'))
 
 def load_actors_from_file():
    try:
-      with open("actors.json","r",encoding="utf-8") as file:
+      with open("actors.json","r",encoding="utf-8", errors='ignore') as file:
          file_contents =file.read()
          actors_data =json.loads(file_contents)
       return actors_data
@@ -180,7 +194,7 @@ def actors():
     return render_template('actors.html',user=current_user,actors=actors_file)
 
 def load_actor_by_id(id):
-    with open("actors.json","r",encoding="utf-8") as file:
+    with open("actors.json","r",encoding="utf-8", errors='ignore') as file:
         actors_file =json.load(file) #NO `s` in `load`
         # print("All actors:", actors_file)
     for actor in actors_file:

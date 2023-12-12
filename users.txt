@@ -1,3 +1,3 @@
-da793fae-1a56-4a04-b620-dc0ffd2fca68;user;user@user.com;$2b$12$ajTkOdcj86B694H.60tCuuMdbN5cyn4cbF7/usPfUL52aiOHqNQFa
-;Bikini Inception;Superman IV: The Quest for Peace;Superman IV: The Quest for Peace;El crack cero;Superman IV: The Quest for Peace;Five Nights at Freddy's;Superman IV: The Quest for Peaced423d40f-1291-4095-b6ff-a68ee1cef874;jess;jess@gmail.com;$2b$12$Mft92/IiEXTrYgNbFatEVOLFgHuTP4yPDdoUhCnIwH/XWLzyLTfji
-;The Hunger Games: The Ballad of Songbirds & Snakes;Superman IV: The Quest for Peace;Oppenheimer;Superman IV: The Quest for Peace;Migration;Peace Rate;Война и Мир 4: Пьер Безухов;和平飯店;破·局;和平飯店
+90d1f0aa-8766-4217-b994-e35feacb1076;user;user@user.com;$2b$12$b/Pn7lGJuh9t38whmert1.GLAefZX7e.MPPs3K7avl5OkUNtN2pt.;Война и Мир 1: Андрей Болконский;Mission: Impossible - Dead Reckoning Part One;Peace Rate
+
+b13f3ef2-6ee5-4ac4-8712-bab292e0200e;admin;admin@admin.com;$2b$12$.fb7eByd/ND1FhkTbRMPEunKiY.b5AsSICqfDzLUdaQI.3CTjbk7O;Peace Rate;Mission: Impossible - Dead Reckoning Part One;Fast X
