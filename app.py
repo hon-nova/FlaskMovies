@@ -1,4 +1,4 @@
-from flask import Flask, render_template,session,redirect, url_for, request
+from flask import Flask, render_template,session,redirect, url_for, request,jsonify
 from flask_login import LoginManager,UserMixin,login_user,logout_user,login_required,current_user
 from flask_bcrypt import Bcrypt
 import os
@@ -145,8 +145,7 @@ def home():
 @app.route('/save/<original_title>', methods=['POST'])
 def save(original_title=None):
     if request.method == 'POST' and current_user.is_authenticated:
-        user_identifier = current_user.id
-        user_record = f'{user_identifier};{current_user.username};{current_user.email};{current_user.password}'
+        user_identifier = current_user.id        
 
         with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
             lines = file.readlines()
@@ -167,6 +166,7 @@ def save(original_title=None):
                     return redirect(url_for('home'))
                 else:
                     print("User already has three movies saved. Cannot add more.")
+                    flash('User already has three movies saved. Cannot add more.', 'warning')
                     return redirect(url_for('home'))
 
         print("User not found in the file.")
@@ -213,9 +213,36 @@ def actor_movies(actor_id_pass):
     return render_template('actor-movies.html',actor_id_pass=actor_id_pass,user=current_user,actor=actor)
 
 
-@app.route('/profile')
+@app.route('/profile',methods=['GET'])
 def profile():
-    return render_template('profile.html',user=current_user)
+    if request.method == 'GET' and current_user.is_authenticated:
+        
+        user_identifier =current_user.id
+        with open("users.txt","r",encoding="utf-8",errors="ignore") as file:
+            lines =file.readlines()
+
+        for line in lines:
+            if user_identifier in line:
+                components=line.split(';')
+                u_movies=set(components[4:])
+
+        session['user_movies'] = list(u_movies)        
+
+        return render_template('profile.html',user=current_user,user_movies=u_movies)
+    return render_template('login.html')
+
+@app.route('/delete/<user_m>',method=['POST'])
+def delete(user_m):
+    if request.method == 'POST' and current_user.is_authenticated:
+        user_movies = session.get('user_movies',[])
+
+        if user_m in user_movies:
+            user_movies.remove(user_m)
+
+            session['user_movies']= user_movies
+            return jsonify({'success': True, 'movie': user_m})
+        
+    return jsonify({'success': False})
 
 
 @app.route('/logout',methods=['POST'])

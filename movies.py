@@ -60,7 +60,7 @@ def fetch_movies():
          movie_info ={
             # 'backdrop_path': movie['backdrop_path'],
             'backdrop_path':movie['poster_path'],
-            'original_title': movie['original_title'],
+            'original_title': movie['title'],
             'release_date':movie['release_date'],
             'overview':movie['overview']
          }
