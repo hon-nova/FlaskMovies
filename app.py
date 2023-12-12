@@ -32,7 +32,6 @@ class User(UserMixin):
 def index():
    return render_template('index.html')
 
-
 @app.route('/register',methods=['GET','POST'])
 def register():
     if request.method == 'POST':
@@ -62,12 +61,12 @@ def save_user(user):
 def load_users():
     with open("users.txt","r") as file:
         lines =file.readlines()
-        return [line.strip().split(':') for line in lines]
+        return [line.strip().split(';') for line in lines]
     
 def load_user_by_username_password(username,password):
     with open("users.txt","r") as file:
         for user in file:
-            user_id,stored_username,stored_email,stored_hashed_password = user.strip().split(':')
+            user_id,stored_username,stored_email,stored_hashed_password = user.strip().split(';')
             # id_str=str(user_id)
 
             if stored_username ==username and bcrypt.check_password_hash(stored_hashed_password,password):
@@ -116,12 +115,10 @@ def read_movies_from_file():
     except json.JSONDecodeError:
         print("Error: Unable to decode JSON from movies.json.")
         return []
-    
 
 @app.route('/home',methods=['GET','POST'])
 @login_required
 def home():   
-
     movies=read_movies_from_file()      
     year =[]    
      # x=numpy.array(list) and then use numpy.unique(x) 
@@ -140,27 +137,28 @@ def home():
 
 
 @app.route('/save/<original_title>',methods=['POST'])
-def save(original_title):
-    if request.method=='POST':
+def save(original_title=None):
+    if request.method=='POST' and current_user.is_authenticated:
         print(original_title)
+        user_identifier =current_user.id
+        user_record=f'{user_identifier};{current_user.username};{current_user.email};{current_user.password}'
 
-        if current_user.is_authenticated:
+        components = user_record.split(';')
+        current_movie_titles = set(components[4:])
+        print(f'current_movie_title:  {current_movie_titles}')
 
-            user_identifier =current_user.id
-            user_record=f'{user_identifier};{current_user.username};{current_user.email};{current_user.password}'
+        if len(current_movie_titles)<3 and original_title not in current_movie_titles:
+            
+            with open("users.txt","a",encoding='utf-8') as file:
+                delimiter = ';' 
+                file.write(f'{delimiter}{original_title}')
 
-            components = user_record.split(';')
-            current_movie_title =components[4:]
-
-            if len(current_movie_title)<3:
-               
-                with open("users.txt","a") as file:
-                    file.write(f';{original_title}')
-
-                print("Saved successfully")
-            else:
-                print("User already has three movies saved. Cannot add more.")
-    return redirect('home')
+            print("Saved successfully")
+            redirect(url_for('home'))
+        else:
+            print("User already has three movies saved. Cannot add more.")
+            return redirect(url_for('home'))
+    return redirect(url_for('home'))
 
 def load_actors_from_file():
    try:
@@ -209,9 +207,7 @@ def profile():
 @app.route('/logout',methods=['POST'])
 @login_required
 def logout():
-   
     session.clear()
-   
     logout_user()
     return redirect(url_for('login'))
 
