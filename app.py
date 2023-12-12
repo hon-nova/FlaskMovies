@@ -231,9 +231,10 @@ def profile():
         return render_template('profile.html',user=current_user,user_movies=u_movies)
     return render_template('login.html')
 
-@app.route('/delete/<user_m>',method=['POST'])
+@app.route('/delete/<user_m>',methods=['POST'])
 def delete(user_m):
     if request.method == 'POST' and current_user.is_authenticated:
+        user_identifier = current_user.id
         user_movies = session.get('user_movies',[])
 
         if user_m in user_movies:
@@ -241,6 +242,28 @@ def delete(user_m):
 
             session['user_movies']= user_movies
             return jsonify({'success': True, 'movie': user_m})
+        
+        # Read the file content
+        with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
+            lines = file.readlines()
+
+        # Find and update the correct user's record
+        for i, line in enumerate(lines):
+            if user_identifier in line:
+                components = line.split(';')
+                user_movies = set(components[4:])
+
+                if user_m in user_movies:
+                    user_movies.remove(user_m)
+                    lines[i] = f'{components[0]};{components[1]};{components[2]};{components[3]};{";".join(user_movies)}\n'
+
+                    # Write the updated content back to the file
+                    with open("users.txt", "w", encoding='utf-8', errors='ignore') as file:
+                        file.writelines(lines)
+
+                    flash('Movie deleted successfully.', 'success')
+                    return redirect(url_for('profile'))
+
         
     return jsonify({'success': False})
 

@@ -9,21 +9,31 @@
 {%block content %} 
 <div class="container">
    <div class="row mb-5">
-      <div class="col-md-1">left</div>
-      <div class="col-md-5 profile">profile
+      <div class="col-md-1"></div>
+      <div class="col-md-5 profile">
          <div class="">
-            <p>User Profile</p>
-            <p>Username: {{user.username}}</p>
-            <p>{{user.email}}</p>
+            <h3 style="font-family: cursive;">Your Profile</h3>
+            <h5>Username: {{user.username}}</h5>
+            <p>Contact email: {{user.email}}</p>
            
          </div>
       </div>
-      <div class="col-md-5">
-         <h4>Your Watch List</h4>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %} {% for category, message in messages %}
+      <div
+         class="alert alert-{{ category }} alert-dismissible fade show"
+         role="alert"
+      >
+         {{ message }}
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <div class="col-md-5 watchlist">
+         <h3 class="text-center">Your Saved Watch List</h3>
          <table class="table table-stripe">
             <tbody>
-               {%for user_m in movies | reverse %}
-               <tr>
+               {%for user_m in user_movies | reverse %}
+               <tr id="movie-{{ loop.index }}">
                   <td>{{user_m}}</td>
                   <td>                 
                      <form class="deleteMovieForm" data-movie-id="{{ loop.index }}" method="post" action="{{url_for('delete',user_m=user_m)}}">
@@ -38,7 +48,7 @@
          </table>    
         
       </div>
-      <div class="col-md-1">right</div>
+      <div class="col-md-1"></div>
    </div>
 </div>
 <script>
@@ -49,7 +59,8 @@
            form.addEventListener('submit', function (event) {
                event.preventDefault();
                const movieId = this.dataset.movieId;
-              
+
+               // Perform AJAX request to delete the movie
                fetch(this.action, {
                    method: 'POST',
                    body: new FormData(this)
@@ -57,7 +68,7 @@
                    .then(response => response.json())
                    .then(data => {
                        if (data.success) {
-                           
+                           // Remove the corresponding HTML element
                            const movieElement = document.getElementById(`movie-${movieId}`);
                            if (movieElement) {
                                movieElement.remove();
@@ -71,6 +82,5 @@
        });
    });
 </script>
-
 
 {% endblock %}
