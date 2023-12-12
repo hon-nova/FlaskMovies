@@ -231,42 +231,38 @@ def profile():
         return render_template('profile.html',user=current_user,user_movies=u_movies)
     return render_template('login.html')
 
-@app.route('/delete/<user_m>',methods=['POST'])
+@app.route('/delete/<user_m>', methods=['POST'])
 def delete(user_m):
-    if request.method == 'POST' and current_user.is_authenticated:
-        user_identifier = current_user.id
-        user_movies = session.get('user_movies',[])
+    if not current_user.is_authenticated:
+        return jsonify({'success': False, 'message': 'User not authenticated'})
 
-        if user_m in user_movies:
-            user_movies.remove(user_m)
+    user_movies = session.get('user_movies', [])
 
-            session['user_movies']= user_movies
-            return jsonify({'success': True, 'movie': user_m})
-        
-        # Read the file content
-        with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
-            lines = file.readlines()
+    if user_m in user_movies:
+        user_movies.remove(user_m)
+        session['user_movies'] = user_movies
 
-        # Find and update the correct user's record
-        for i, line in enumerate(lines):
-            if user_identifier in line:
-                components = line.split(';')
-                user_movies = set(components[4:])
+    
+        update_user_file(user_m, user_movies)
 
-                if user_m in user_movies:
-                    user_movies.remove(user_m)
-                    lines[i] = f'{components[0]};{components[1]};{components[2]};{components[3]};{";".join(user_movies)}\n'
+        return jsonify({'success': True, 'movie': user_m})
 
-                    # Write the updated content back to the file
-                    with open("users.txt", "w", encoding='utf-8', errors='ignore') as file:
-                        file.writelines(lines)
+    return jsonify({'success': False, 'message': 'Movie not found in user_movies'})
 
-                    flash('Movie deleted successfully.', 'success')
-                    return redirect(url_for('profile'))
 
-        
-    return jsonify({'success': False})
+def update_user_file(user_m, user_movies):
+    user_identifier = current_user.id
 
+    with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
+        lines = file.readlines()
+
+    for i, line in enumerate(lines):
+        if user_identifier in line:
+            components = line.split(';')
+            lines[i] = f'{components[0]};{components[1]};{components[2]};{components[3]};{";".join(user_movies)}\n'
+
+    with open("users.txt", "w", encoding='utf-8', errors='ignore') as file:
+        file.writelines(lines)
 
 @app.route('/logout',methods=['POST'])
 @login_required
