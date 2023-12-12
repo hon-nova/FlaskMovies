@@ -56,10 +56,8 @@ def fetch_actors():
                 'original_name': actor['original_name'],
                 'id': actor['id'],
                 'profile_path':actor['profile_path'],
-                'known_for':known_for_array}
-            
-                
-            #  condition here
+                'known_for':known_for_array}                 
+           
             if (actor_info['original_name'],actor_info['profile_path']) not in actors_old:
                actors_file.append(actor_info)
                count+=1

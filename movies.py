@@ -69,13 +69,12 @@ def fetch_movies():
                
                movies_file.append(movie_info)
                count+=1
-               # Add the new movie to the movies_old set to keep track of existing records
+             
                movies_old.add((movie_info['original_title'], movie_info['release_date']))
 
       print(f'count: {count}')
       print(f'length movies_file: {len(movies_file)}')
-
-      #write to file
+     
       with open("movies.json", "w", encoding="utf-8") as file:
          json.dump(movies_file, file, indent=2)
 

@@ -16,9 +16,6 @@ content %}
       {{ message }}
    </div>
    {% endfor %} {% endif %} {% endwith %}
-
-
-   <!-- select option -->
    <div class="mb-5">
       <label for="year" style="font-size: 20px;">Select year released: </label>
       <select id="year" onchange="filterMovies()" style="width:100px; border-radius: 10px;">
@@ -83,10 +80,9 @@ content %}
     }
 
     document.getElementById("saveForm").addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
         await saveMovie();
     });
    </script>
 </div>
-
 {% endblock %}

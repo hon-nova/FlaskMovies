@@ -66,19 +66,17 @@ def load_users():
 def load_user_by_username_password(username,password):
     with open("users.txt","r",encoding="utf-8",errors="ignore") as file:
         for user in file:
-            # user_id,stored_username,stored_email,stored_hashed_password = user.strip().split(';')
+           
             components = user.strip().split(";")
             if len(components) >= 4:
                 user_id = components[0]
                 stored_username = components[1]
                 stored_email = components[2]
-                stored_hashed_password = components[3]
-            # id_str=str(user_id)
+                stored_hashed_password = components[3]            
 
             if stored_username ==username and bcrypt.check_password_hash(stored_hashed_password,password):
                 return User(id=str(user_id),username=stored_username,email=stored_email,password=stored_hashed_password)
-    return None
-            
+    return None            
 
 @login_manager.user_loader
 def load_user(user_id):   
@@ -150,8 +148,7 @@ def save(original_title=None):
         with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
             lines = file.readlines()
         print(f'All files:: {lines}')
-
-        # Find and update the correct user's record
+      
         for i, line in enumerate(lines):
             if user_identifier in line:
                 components = line.split(';')
