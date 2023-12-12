@@ -1,0 +1,27 @@
+{% extends 'base.html' %} 
+{% block title %}My Profile Page{% endblock %} 
+
+{% block head %} 
+   {{ super() }}
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+{% endblock %}
+
+{%block content %} 
+<div class="container">
+   <div class="row mb-5">
+      <div class="col-md-1">left</div>
+      <div class="col-md-5 profile">profile
+         <div class="">
+            <p>User Profile</p>
+            <p>Username: {{user.username}}</p>
+            <p>{{user.email}}</p>
+           
+         </div>
+      </div>
+      <div class="col-md-5">WatchList</div>
+      <div class="col-md-1">right</div>
+   </div>
+</div>
+
+
+{% endblock %}

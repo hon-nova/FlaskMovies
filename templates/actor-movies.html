@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block title %} Actor - Movies {% endblock %} {%
+block head %} {{ super() }}
+<link
+   rel="stylesheet"
+   href="{{ url_for('static', filename='css/actor-movies.css') }}"
+/>
+{% endblock %} {%block content %}
+
+<div class="container">
+   <div class="row mb-3">
+      <div class="col-md-1"></div>
+      <div class="col-md-3 mx-1 py-1">
+         <h3>{{actor.original_name}}</h3>
+         <img
+            src="https://image.tmdb.org/t/p/w500{{actor.profile_path}}"
+            alt=""
+            style="width: 300px; height: 350px; border-radius: 20px"
+         />
+      </div>
+      <div class="col-md-7 mx-1 py-1" style="background-color: blanchedalmond">
+         {%for movie in actor.get('known_for',[])%}
+         <div class="d-flex mb-3 py-3">
+            <img
+               src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}"
+               alt=""
+               style="width: 320px; height: 320px; border-radius: 20px"
+            />
+            <div class="mx-3">
+               <h3 class="text-end" style="font-family: cursive;color:goldenrod">{{movie.title}}</h3>
+               <p><small>{{movie.overview}}</small></p>
+               <h6>Release date: {{movie.release_date}}</h6>
+            </div>
+           
+         </div>
+
+         {%endfor%}
+      </div>
+      <div class="col-md-1"></div>
+   </div>
+</div>
+
+{% endblock %}

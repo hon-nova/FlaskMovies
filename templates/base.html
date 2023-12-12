@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block head %}{% endblock %}
+</head>
+<body>   
+   
+    {%include 'navbar.html'%}
+  
+
+    <!-- Main content block -->
+    <div id="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Common footer -->
+    
+    {% include 'footer.html'%}
+  
+</body>
+</html>
