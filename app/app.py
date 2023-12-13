@@ -27,10 +27,17 @@ class User(UserMixin):
     @property
     def is_active(self):
         return True
-
+    
+current_pwd = os.getcwd()
 @app.route('/')
 def index():
    return render_template('index.html')
+
+def save_user(user):
+    user_path=os.path.join(current_pwd,"..","users.txt")
+    with open(user_path,"a", errors='ignore') as file:
+        file.write(f'{user.id};{user.username};{user.email};{user.password}\n')
+    
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -54,17 +61,10 @@ def register():
     return render_template('register.html')
 
 
-def save_user(user):
-    with open("users.txt","a", errors='ignore') as file:
-        file.write(f'{user.id};{user.username};{user.email};{user.password}\n')
-    
-def load_users():
-    with open("users.txt","r", errors='ignore') as file:
-        lines =file.readlines()
-        return [line.strip().split(';') for line in lines]
     
 def load_user_by_username_password(username,password):
-    with open("users.txt","r",encoding="utf-8",errors="ignore") as file:
+    user_path=os.path.join(current_pwd,"..","users.txt")
+    with open(user_path,"r",encoding="utf-8",errors="ignore") as file:
         for user in file:
            
             components = user.strip().split(";")
@@ -76,7 +76,13 @@ def load_user_by_username_password(username,password):
 
             if stored_username ==username and bcrypt.check_password_hash(stored_hashed_password,password):
                 return User(id=str(user_id),username=stored_username,email=stored_email,password=stored_hashed_password)
-    return None            
+    return None 
+
+def load_users():
+    user_path=os.path.join(current_pwd,"..","users.txt")
+    with open(user_path,"r", errors='ignore') as file:
+        lines =file.readlines()
+        return [line.strip().split(';') for line in lines]
 
 @login_manager.user_loader
 def load_user(user_id):   
@@ -106,7 +112,8 @@ def login():
 
 def read_movies_from_file():
     try:
-        with open("movies.json","r",encoding="utf-8", errors='ignore') as file:
+        movie_path=os.path.join(current_pwd,"..","movies.json")
+        with open(movie_path,"r",encoding="utf-8", errors='ignore') as file:
             file_contents = file.read()
            
             movies=json.loads(file_contents)
@@ -143,9 +150,11 @@ def home():
 @app.route('/save/<original_title>', methods=['POST'])
 def save(original_title=None):
     if request.method == 'POST' and current_user.is_authenticated:
-        user_identifier = current_user.id        
+        user_identifier = current_user.id      
 
-        with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
+        movie_path=os.path.join(current_pwd,"..","movies.json")
+
+        with open(movie_path, "r", encoding='utf-8', errors='ignore') as file:
             lines = file.readlines()
         print(f'All files:: {lines}')
       
@@ -156,7 +165,7 @@ def save(original_title=None):
                 current_movie_titles = set(components[4:])
                 if len(current_movie_titles) < 3 and original_title not in current_movie_titles:
                     lines[i] = f'{line.rstrip()};{original_title}\n'
-                    with open("users.txt", "w", encoding='utf-8', errors='ignore') as file:
+                    with open(movie_path, "w", encoding='utf-8', errors='ignore') as file:
                         file.writelines(lines)
 
                     print("Saved successfully")
@@ -173,7 +182,8 @@ def save(original_title=None):
 
 def load_actors_from_file():
    try:
-      with open("actors.json","r",encoding="utf-8", errors='ignore') as file:
+      actor_path=os.path.join(current_pwd,"..","actors.json")
+      with open(actor_path,"r",encoding="utf-8", errors='ignore') as file:
          file_contents =file.read()
          actors_data =json.loads(file_contents)
       return actors_data
@@ -191,7 +201,8 @@ def actors():
     return render_template('actors.html',user=current_user,actors=actors_file)
 
 def load_actor_by_id(id):
-    with open("actors.json","r",encoding="utf-8", errors='ignore') as file:
+    actor_path=os.path.join(current_pwd,"..","actors.json")
+    with open(actor_path,"r",encoding="utf-8", errors='ignore') as file:
         actors_file =json.load(file) #NO `s` in `load`
         # print("All actors:", actors_file)
     for actor in actors_file:
@@ -215,7 +226,8 @@ def profile():
     if request.method == 'GET' and current_user.is_authenticated:
         
         user_identifier =current_user.id
-        with open("users.txt","r",encoding="utf-8",errors="ignore") as file:
+        user_path=os.path.join(current_pwd,"..","users.txt")
+        with open(user_path,"r",encoding="utf-8",errors="ignore") as file:
             lines =file.readlines()
 
         for line in lines:
@@ -250,7 +262,8 @@ def delete(user_m):
 def update_user_file(user_m, user_movies):
     user_identifier = current_user.id
 
-    with open("users.txt", "r", encoding='utf-8', errors='ignore') as file:
+    user_path=os.path.join(current_pwd,"..","users.txt")
+    with open(user_path, "r", encoding='utf-8', errors='ignore') as file:
         lines = file.readlines()
 
     for i, line in enumerate(lines):
@@ -258,7 +271,7 @@ def update_user_file(user_m, user_movies):
             components = line.split(';')
             lines[i] = f'{components[0]};{components[1]};{components[2]};{components[3]};{";".join(user_movies)}\n'
 
-    with open("users.txt", "w", encoding='utf-8', errors='ignore') as file:
+    with open(user_path, "w", encoding='utf-8', errors='ignore') as file:
         file.writelines(lines)
 
 @app.route('/logout',methods=['POST'])
