@@ -34,7 +34,7 @@ def index():
    return render_template('index.html')
 
 def save_user(user):
-    user_path=os.path.join(current_pwd,"..","users.txt")
+    user_path=os.path.join(current_pwd,"users.txt")
     with open(user_path,"a", errors='ignore') as file:
         file.write(f'{user.id};{user.username};{user.email};{user.password}\n')
     
@@ -63,7 +63,7 @@ def register():
 
     
 def load_user_by_username_password(username,password):
-    user_path=os.path.join(current_pwd,"..","users.txt")
+    user_path=os.path.join(current_pwd,"users.txt")
     with open(user_path,"r",encoding="utf-8",errors="ignore") as file:
         for user in file:
            
@@ -79,7 +79,7 @@ def load_user_by_username_password(username,password):
     return None 
 
 def load_users():
-    user_path=os.path.join(current_pwd,"..","users.txt")
+    user_path=os.path.join(current_pwd,"users.txt")
     with open(user_path,"r", errors='ignore') as file:
         lines =file.readlines()
         return [line.strip().split(';') for line in lines]
@@ -112,7 +112,7 @@ def login():
 
 def read_movies_from_file():
     try:
-        movie_path=os.path.join(current_pwd,"..","movies.json")
+        movie_path=os.path.join(current_pwd,"movies.json")
         with open(movie_path,"r",encoding="utf-8", errors='ignore') as file:
             file_contents = file.read()
            
@@ -152,7 +152,7 @@ def save(original_title=None):
     if request.method == 'POST' and current_user.is_authenticated:
         user_identifier = current_user.id      
 
-        movie_path=os.path.join(current_pwd,"..","movies.json")
+        movie_path=os.path.join(current_pwd,"movies.json")
 
         with open(movie_path, "r", encoding='utf-8', errors='ignore') as file:
             lines = file.readlines()
@@ -182,7 +182,7 @@ def save(original_title=None):
 
 def load_actors_from_file():
    try:
-      actor_path=os.path.join(current_pwd,"..","actors.json")
+      actor_path=os.path.join(current_pwd,"actors.json")
       with open(actor_path,"r",encoding="utf-8", errors='ignore') as file:
          file_contents =file.read()
          actors_data =json.loads(file_contents)
@@ -201,7 +201,7 @@ def actors():
     return render_template('actors.html',user=current_user,actors=actors_file)
 
 def load_actor_by_id(id):
-    actor_path=os.path.join(current_pwd,"..","actors.json")
+    actor_path=os.path.join(current_pwd,"actors.json")
     with open(actor_path,"r",encoding="utf-8", errors='ignore') as file:
         actors_file =json.load(file) #NO `s` in `load`
         # print("All actors:", actors_file)
@@ -226,7 +226,7 @@ def profile():
     if request.method == 'GET' and current_user.is_authenticated:
         
         user_identifier =current_user.id
-        user_path=os.path.join(current_pwd,"..","users.txt")
+        user_path=os.path.join(current_pwd,"users.txt")
         with open(user_path,"r",encoding="utf-8",errors="ignore") as file:
             lines =file.readlines()
 
@@ -262,7 +262,7 @@ def delete(user_m):
 def update_user_file(user_m, user_movies):
     user_identifier = current_user.id
 
-    user_path=os.path.join(current_pwd,"..","users.txt")
+    user_path=os.path.join(current_pwd,"users.txt")
     with open(user_path, "r", encoding='utf-8', errors='ignore') as file:
         lines = file.readlines()
 
