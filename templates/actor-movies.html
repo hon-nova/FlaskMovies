@@ -5,7 +5,7 @@ block head %} {{ super() }}
    href="{{ url_for('static', filename='css/actor-movies.css') }}"
 />
 {% endblock %} {%block content %}
-
+{%include 'navbar.html'%}
 <div class="container">
    <div class="row mb-3">
       <div class="col-md-1"></div>
@@ -38,5 +38,5 @@ block head %} {{ super() }}
       <div class="col-md-1"></div>
    </div>
 </div>
-
+{%include 'footer.html'%}
 {% endblock %}

@@ -1,11 +1,12 @@
-
-{% extends 'base.html' %} {% block title %}Footer{%
-   endblock %}
-   {%block head%} 
-   {{ super() }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Footer</title>
    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-   {%endblock}
-   {% block content %}
+</head>
+<body>
    <div class="text-center">
       <footer class="fixed-bottom">
          <div>        
@@ -16,6 +17,8 @@
          </div>
       </footer>
    </div>
-{%endblock}
-
+</body>
+</html> 
+   
+ 
 

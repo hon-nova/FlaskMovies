@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %}Actors & Theirs Successful Movies{%
 endblock %} {% block content %}
-
+{%include 'navbar.html'%} 
 <div class="text-center" style="margin-left: 120px">
    <h2
       class="mb-5 py-2"
@@ -26,4 +26,5 @@ endblock %} {% block content %}
       {% endfor %}
    </div>
 </div>
+{%include 'footer.html'%}
 {% endblock %}
