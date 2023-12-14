@@ -1,8 +1,9 @@
-90d1f0aa-8766-4217-b994-e35feacb1076;user;user@user.com;$2b$12$b/Pn7lGJuh9t38whmert1.GLAefZX7e.MPPs3K7avl5OkUNtN2pt.;Peace Hotel;De son vivant
+90d1f0aa-8766-4217-b994-e35feacb1076;user;user@user.com;$2b$12$b/Pn7lGJuh9t38whmert1.GLAefZX7e.MPPs3K7avl5OkUNtN2pt.;Peace Hotel
 
 
 
 b13f3ef2-6ee5-4ac4-8712-bab292e0200e;admin;admin@admin.com;$2b$12$.fb7eByd/ND1FhkTbRMPEunKiY.b5AsSICqfDzLUdaQI.3CTjbk7O;Peace Hotel;Peace Hotel;Ultraman M78 Theater Love & Peace;Wish
 3f18fd56-f745-43f9-84aa-8d0ae998e273;jess;jess@user.com;$2b$12$P8FCcADs0SmxmFdp2CIR6Og0f0WjZn7ZPYTVddScVJmRMG9z20.EO;Forever Hold Your Peace;Forever Hold Your Peace;Fast X;Sound of Freedom
-19442470-854c-41db-9baf-1e30f2428d55;hon;hon@hon.com;$2b$12$/3OUf38QRWfdkWc.iHFyAOD4wIlz/9Pm2kR7n/iJIV5pMIimUPD..;Mission: Impossible - Dead Reckoning Part One
+19442470-854c-41db-9baf-1e30f2428d55;hon;hon@hon.com;$2b$12$/3OUf38QRWfdkWc.iHFyAOD4wIlz/9Pm2kR7n/iJIV5pMIimUPD..;Mission: Impossible - Dead Reckoning Part One;War and Peace
 7735022e-8e63-4361-84d1-9502cb55460c;lin;lin@gmail.com;$2b$12$gpwiI0oiQX8cmC66ZTEcPORLhpv.x4Zx72j78NX0USgAIYwfLRMLG
+b9ad4800-0999-429f-ba1b-d99ee495360a;henry;henry@gmail.com;$2b$12$W1Tzpiebcme9UmdQTrRAYOeCjAVEKhi/kHlJGnVFuhZfokl8a4pOu;Peace Hotel

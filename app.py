@@ -6,15 +6,23 @@ from flask import flash
 import uuid
 import json
 import numpy
+import secrets
 
 from dotenv import load_dotenv
 load_dotenv()
-
+# secret_key = secrets.token_hex(16)
+# print(secret_key)
 app = Flask(__name__)
+
+
 
 login_manager = LoginManager(app)
 
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+
+project_home='/home/hondocker23/mysite'
+app.config.from_envvar(project_home+'.env', silent=True)
+app.secret_key = app.config.get('PYTHON_SECRET_KEY', 'default_secret_key')
 bcrypt=Bcrypt(app)
 
 class User(UserMixin):
@@ -29,6 +37,8 @@ class User(UserMixin):
         return True
     
 current_pwd = os.getcwd()
+# project_home = '/home/hondocker23/mysite'
+
 @app.route('/')
 def index():
    return render_template('index.html')
@@ -152,11 +162,11 @@ def save(original_title=None):
     if request.method == 'POST' and current_user.is_authenticated:
         user_identifier = current_user.id      
 
-        movie_path=os.path.join(current_pwd,"movies.json")
+        movie_path=os.path.join(current_pwd,"users.txt")
 
         with open(movie_path, "r", encoding='utf-8', errors='ignore') as file:
             lines = file.readlines()
-        print(f'All files:: {lines}')
+        # print(f'All files:: {lines}')
       
         for i, line in enumerate(lines):
             if user_identifier in line:
@@ -234,6 +244,7 @@ def profile():
             if user_identifier in line:
                 components=line.split(';')
                 u_movies=set(components[4:])
+        print(f'set u_movies {u_movies}')
 
         session['user_movies'] = list(u_movies)        
 
@@ -252,14 +263,14 @@ def delete(user_m):
         session['user_movies'] = user_movies
 
     
-        update_user_file(user_m, user_movies)
+        update_user_file(user_movies)
 
         return jsonify({'success': True, 'movie': user_m})
 
     return jsonify({'success': False, 'message': 'Movie not found in user_movies'})
 
 
-def update_user_file(user_m, user_movies):
+def update_user_file(user_movies):
     user_identifier = current_user.id
 
     user_path=os.path.join(current_pwd,"users.txt")
