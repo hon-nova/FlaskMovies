@@ -14,8 +14,6 @@ load_dotenv()
 # print(secret_key)
 app = Flask(__name__)
 
-
-
 login_manager = LoginManager(app)
 
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
@@ -160,35 +158,36 @@ def home():
 @app.route('/save/<original_title>', methods=['POST'])
 def save(original_title=None):
     if request.method == 'POST' and current_user.is_authenticated:
-        user_identifier = current_user.id      
+        user_identifier = current_user.id
 
-        movie_path=os.path.join(current_pwd,"users.txt")
+        movie_path = os.path.join(current_pwd, "users.txt")
 
         with open(movie_path, "r", encoding='utf-8', errors='ignore') as file:
             lines = file.readlines()
-        # print(f'All files:: {lines}')
-      
+
         for i, line in enumerate(lines):
             if user_identifier in line:
                 components = line.split(';')
-                print(f'components array: {components}')
                 current_movie_titles = set(components[4:])
                 if len(current_movie_titles) < 3 and original_title not in current_movie_titles:
                     lines[i] = f'{line.rstrip()};{original_title}\n'
                     with open(movie_path, "w", encoding='utf-8', errors='ignore') as file:
                         file.writelines(lines)
 
-                    print("Saved successfully")
+                    flash('Movie saved successfully!', 'success')  # Adjust the flash message
                     return redirect(url_for('home'))
+
                 else:
-                    print("User already has three movies saved. Cannot add more.")
                     flash('User already has three movies saved. Cannot add more.', 'warning')
                     return redirect(url_for('home'))
 
-        print("User not found in the file.")
+        flash('User not found in the file.', 'danger')
         return redirect(url_for('home'))
 
     return redirect(url_for('home'))
+
+
+
 
 def load_actors_from_file():
    try:
